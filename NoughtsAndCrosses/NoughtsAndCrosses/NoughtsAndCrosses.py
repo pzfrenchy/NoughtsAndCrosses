@@ -1,4 +1,4 @@
-import os
+from os import system
 
 #initialise board with empty strings
 board = [[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
@@ -18,8 +18,7 @@ edgeCases = ['3','6','9']
 turn = 0
 
 def clearScreen():
-    clear = lambda: os.system('cls')
-    clear()
+    system('cls') 
 
 def drawSelectionBoard():
     print('┌─┬─┬─┐')
@@ -48,7 +47,7 @@ def getMove():
 
 def getArrayPosition(move):
     position = list(divmod(int(move),3))
-    position[1] -= 1
+    position[1] -= 1 #subtract 1 from the column value due to divmod value starting from 1
     if move in edgeCases:
         position[0] -= 1
         position[1] = 2  
