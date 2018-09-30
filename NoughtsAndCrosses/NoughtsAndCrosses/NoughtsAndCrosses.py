@@ -49,7 +49,7 @@ def getMove():
 def getArrayPosition(move):
     position = list(divmod(int(move),3))
     position[1] -= 1
-    if move in ['3','6','9']:
+    if move in edgeCases:
         position[0] -= 1
         position[1] = 2  
     return position
@@ -74,7 +74,7 @@ def applyMark(move):
 
 def checkWin(value):
     for combo in winningCombos:
-        winCount = 0
+        winCount = 0 #count to hold num of cells with value in
         for cell in combo:
             if board[cell[0]][cell[1]] == value:
                 winCount += 1
