@@ -1,8 +1,5 @@
 from os import system
 
-#initialise board with empty strings
-board = [[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
-
 #array co-ordinates for all winning combinations
 winningCombos = [[(0,0), (0,1), (0,2)], [(1,0), (1,1), (1,2)], [(2,0), (2,1), (2,2)],
                 [(0,0), (1,0), (2,0)], [(0,1), (1,1), (2,1)], [(0,2), (1,2), (2,2)],
@@ -17,30 +14,35 @@ edgeCases = ['3','6','9']
 #stores current turn number, used to decide if X or O is displayed
 turn = 0
 
+def createBoard():
+    #initialise board with empty strings
+    board = [[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
+    return board
+
 def clearScreen():
     system('cls') 
 
-def drawSelectionBoard():
+def drawBoard(board):
+    clearScreen()
     print('┌─┬─┬─┐')
-    print('|{}|{}|{}|'.format(board[0][0], board[0][1], board[0][2]))
-    print('├─┼─┼─┤')
-    print('|{}|{}|{}|'.format(board[1][0], board[1][1], board[1][2]))
-    print('├─┼─┼─┤')
-    print('|{}|{}|{}|'.format(board[2][0], board[2][1], board[2][2]))
+    for i in range(0,len(board)):
+        print('|{}|{}|{}|'.format(board[i][0], board[i][1], board[i][2]))
+        if i < len(board)-1:
+            print('├─┼─┼─┤')
     print('└─┴─┴─┘')
 
-def getMove():
+def getMove(board):
     clearScreen()
-    drawSelectionBoard()
+    drawBoard(board)
     move = input("Please select your position from 1 to 9: ")
     found = False
     for num in validSelection:
         if num == move:
             found = True
-            break
+            break #break once validated, no need to continue iteration
     if found == True:
-        if checkFree(move) == True:
-            applyMark(move)
+        if checkFree(move, board) == True:
+            applyMark(move, board)
     else:
         getMove()
     return move
@@ -53,14 +55,14 @@ def getArrayPosition(move):
         position[1] = 2  
     return position
 
-def checkFree(move):
+def checkFree(move, board):
     position = getArrayPosition(move)
     if board[position[0]][position[1]] == ' ':
         return True
     else:
         return False
     
-def applyMark(move):
+def applyMark(move, board):
     global turn
     position = getArrayPosition(move)
 
@@ -71,7 +73,7 @@ def applyMark(move):
         board[position[0]][position[1]] = 'O'
     turn += 1 #mark applied successfully so increment turn
 
-def checkWin(value):
+def checkWin(value, board):
     for combo in winningCombos:
         winCount = 0 #count to hold num of cells with value in
         for cell in combo:
@@ -81,23 +83,22 @@ def checkWin(value):
             return True
     return False
 
+#Program initialisation
+board = createBoard()
 complete = False
 while complete == False:
-    getMove()
-    checkX = checkWin('X')
-    checkO = checkWin('O')
+    getMove(board)
+    checkX = checkWin('X', board)
+    checkO = checkWin('O', board)
     if checkX == True:
-        clearScreen()
-        drawSelectionBoard()
+        drawBoard(board)
         print('Winner winner chicken dinner!! X wins')
         complete = True
     elif checkO == True:
-        clearScreen()
-        drawSelectionBoard()
+        drawBoard(board)
         print('Winner winner chicken dinner!! O wins')
         complete = True
     elif turn > 8:
-        clearScreen()
-        drawSelectionBoard()
+        drawBoard(board)
         print('No winners this time :(')
         complete = True
